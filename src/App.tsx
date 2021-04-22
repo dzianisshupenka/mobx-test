@@ -1,25 +1,16 @@
-import React, { useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import React from 'react';
 import FormComponent from './components/FormComponent';
 import ModalComponent from './components/ModalComponent';
+import modal from './store/modal';
 
-const App = () => {
-
-    const [visible, setVisible] = useState(false);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-
-    const closeModalHandler = () => {
-        setVisible(false);
-        setFirstName('');
-        setLastName('');
-    }
-
+const App:React.FC = observer(() => {
     return (
         <div className="app-container">
-            <FormComponent firstName={firstName} lastName={lastName} openModal={setVisible} setFirstName={setFirstName} setLastName={setLastName} />
-            {visible && <ModalComponent firstName={firstName} lastName={lastName} closeModal={closeModalHandler} />}
+            <FormComponent />
+            {modal.isVisible && <ModalComponent />}
         </div>
     );
-};
+});
 
 export default App;

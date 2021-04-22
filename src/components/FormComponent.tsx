@@ -1,58 +1,45 @@
-import React, { useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import React from 'react';
+import modal from '../store/modal';
+import Names from '../store/names';
 
-type FormPropsType = {
-    openModal(flag: boolean): void
-    setFirstName(firtName: string): void
-    setLastName(lastName: string): void
-    firstName: string,
-    lastName: string
-}
-
-const FormComponent:React.FC<FormPropsType> = ({
-    openModal, 
-    setFirstName, 
-    setLastName,
-    firstName,
-    lastName}: FormPropsType) => {
-
-        const [firstNameError, setFirstNameError] = useState(false);
-        const [lastNameError, setLastNameError] = useState(false);
+const FormComponent:React.FC = observer(() => {
 
     const firstNameHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-        setFirstName(event.currentTarget.value);
+        Names.setFirstName(event.currentTarget.value);
     };
 
     const lastNameHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-        setLastName(event.currentTarget.value);
-    }
+        Names.setLastName(event.currentTarget.value);
+    };
 
     const openModalHandler = () => {
-        if(firstName && lastName) {
-            openModal(true);
+        if(Names.firstName && Names.lastName) {
+            modal.setModalVisibility(true);
         }
-        if (!firstName) {
-            setFirstNameError(true)
-        } else setFirstNameError(false)
-        if (!lastName) {
-            setLastNameError(true)
-        } else setLastNameError(false)
+        if (!Names.firstName) {
+            Names.setFirstNameError(true)
+        } else Names.setFirstNameError(false)
+        if (!Names.lastName) {
+            Names.setLastNameError(true)
+        } else Names.setLastNameError(false)
     }
 
     return (
         <div className="form-wrapper">
             <form>
                 <div>
-                    {firstNameError ? (firstName ? null : <div className="required-error">Обязательное поле</div>) : null}
+                    {Names.firstNameError ? (Names.firstName ? null : <div className="required-error">Обязательное поле</div>) : null}
                     <label className="form-label">
                     Имя:
-                    <input value={firstName} onChange={(e) => firstNameHandler(e)} />
+                    <input value={Names.firstName} onChange={(e) => firstNameHandler(e)} />
                     </label>
                 </div>
                 <div>
-                    {lastNameError ? (lastName ? null : <div className="required-error">Обязательное поле</div>) : null}
+                    {Names.lastNameError ? (Names.lastName ? null : <div className="required-error">Обязательное поле</div>) : null}
                     <label className="form-label">
                     Фамилия:
-                    <input value={lastName} onChange={(e) => lastNameHandler(e)} />
+                    <input value={Names.lastName} onChange={(e) => lastNameHandler(e)} />
                     </label>
                 </div>
                 <div className="button-wrapper">
@@ -61,6 +48,6 @@ const FormComponent:React.FC<FormPropsType> = ({
             </form>
         </div>
     );
-};
+}) ;
 
 export default FormComponent;
